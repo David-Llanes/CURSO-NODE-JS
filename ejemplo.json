@@ -1,0 +1,10 @@
+{
+  "autor": {
+    "edad": 50,
+    "nombre": "Pepito"
+  },
+  "enEmision": false,
+  "episodios": 502,
+  "generos": ["accion", "comedia", "aventura"],
+  "titulo": "Naruto"
+}
