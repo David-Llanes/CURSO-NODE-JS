@@ -10,6 +10,7 @@ function findAvailablePort(desiredPort) {
 
     server.listen(desiredPort, () => {
       const { port } = server.address()
+
       // El callback se ejecutara cuando ocurra el evento close
       server.close(() => {
         // Llegará aqui si ha podido levantar el puerto deseado

@@ -1,0 +1,14 @@
+{
+  "name": "express-freecode",
+  "version": "1.0.0",
+  "description": "Mi primer servidor creado con Express",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "David Llanes",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}

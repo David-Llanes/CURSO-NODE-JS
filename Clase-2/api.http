@@ -1,0 +1,10 @@
+POST http://localhost:3000/pokemon
+Content-Type: application/json
+ 
+{
+  "name": "Pikachu",
+  "type": "normal",
+  "moves": [
+    "transform"
+  ]
+}
