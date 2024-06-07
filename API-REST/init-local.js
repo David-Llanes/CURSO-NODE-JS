@@ -1,5 +1,5 @@
-import { createApp } from "./app.js"
-import { MovieModel } from "./models/movie.js"
+import { createApp } from "./app"
+import { MovieModel } from "./models/Local/movie.js"
 
 // Inicializamos la aplicacion con la inyeccion de dependencias y el MovieModel de eleccion.
 createApp({ movieModel: MovieModel })

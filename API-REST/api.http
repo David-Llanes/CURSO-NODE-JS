@@ -1,0 +1,40 @@
+### Recuperar todas las peliculas
+GET http://localhost:1234/movies
+
+### Recuperar una pelicula por ID
+GET http://localhost:1234/movies/665fd81472fa9dde4f5845d9
+
+### Recuperar las peliculas de un genero especifico
+GET http://localhost:1234/movies?genre=crime
+
+### Recuperar las peliculas de un genero especifico
+GET http://localhost:1234/movies?title=dark
+
+### Recuperar las peliculas que contengan el titulo
+GET http://localhost:1234/movies?title=The+Avengers
+
+### Crear una pelicula CON MONGO DB
+POST http://localhost:1234/movies
+Content-Type: application/json
+
+  {
+    "title": "Forrest Gump",
+    "year": 1994,
+    "director": "Robert Zemeckis",
+    "duration": 142,
+    "poster": "https://i.ebayimg.com/images/g/qR8AAOSwkvRZzuMD/s-l1600.jpg",
+    "genre": ["Drama", "Romance"],
+    "rate": 8.8
+  }
+
+### Actualizar un recurso
+PATCH http://localhost:1234/movies/6662522f2a3c241e2bcec3be
+Content-Type: application/json
+
+{
+  "id": "LA VA A IGNORAR PORQUE NO EXISTE EN EL ESQUEMA",
+  "year": 2010
+}
+
+### Borrar una pelicula
+DELETE http://localhost:1234/movies/665fd3d31368320e1117de1f
