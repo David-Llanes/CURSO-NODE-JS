@@ -1,37 +1,58 @@
 import { validateMovie, validatePartialMovie } from "../schemas/movies.js"
+import { formatErrors } from "../utils/utils.js"
 
 export class MovieController {
   constructor({ movieModel }) {
     this.movieModel = movieModel
   }
 
-  getAll = async (req, res) => {
+  getAll = async (req, res, next) => {
     try {
       const { title, genre } = req.query
       const movies = await this.movieModel.getAll({ genre, title })
       if (movies.length === 0) {
-        return res.status(404).json({ message: "We could not find any movie!" })
+        return res
+          .status(404)
+          .json({ message: "No se encotró ninguna película." })
       }
       res.json(movies)
     } catch (error) {
-      res.status(500).json({ message: error.message })
+      next(error)
     }
   }
 
-  getById = async (req, res) => {
+  getById = async (req, res, next) => {
     const { id } = req.params
-    const movie = await this.movieModel.getById({ id })
-    if (movie) return res.json(movie)
-    res.status(404).json({ message: "Movie not found..." })
+
+    try {
+      const movie = await this.movieModel.getById({ id })
+
+      if (!movie)
+        return res
+          .status(404)
+          .json({ message: "No se encontró una pelicula con esa ID." })
+
+      return res.json(movie)
+    } catch (error) {
+      next(error)
+    }
   }
 
   create = async (req, res, next) => {
     const result = validateMovie(req.body)
+
     if (!result.success) {
-      return res.status(422).json({ error: JSON.parse(result.error.message) })
+      const formattedErrors = formatErrors(result.error)
+
+      return res.status(422).json({ error: formattedErrors })
     }
+
     try {
       const newMovie = await this.movieModel.create({ input: result.data })
+
+      if (!newMovie) {
+        return res.status(500).json({ message: "No se pudo crear el recurso." })
+      }
 
       res.status(201).json(newMovie)
     } catch (error) {
@@ -39,35 +60,50 @@ export class MovieController {
     }
   }
 
-  update = async (req, res) => {
+  update = async (req, res, next) => {
+    const { id } = req.params
     const result = validatePartialMovie(req.body)
 
     if (result.error) {
-      return res.status(400).json({ error: JSON.parse(result.error.message) })
+      const formattedErrors = formatErrors(result.error)
+
+      return res.status(400).json({ error: formattedErrors })
     }
 
-    const { id } = req.params
-    const updatedMovie = await this.movieModel.update({
-      id,
-      input: result.data,
-    })
+    try {
+      const updatedMovie = await this.movieModel.update({
+        id,
+        input: result.data,
+      })
 
-    if (updatedMovie === false) {
-      return res.status(404).json({ message: "Movie not found..." })
+      if (updatedMovie === false) {
+        return res
+          .status(404)
+          .json({ message: "No se encontró una pelicula con esa ID." })
+      }
+
+      return res.json(updatedMovie)
+    } catch (error) {
+      next(error)
     }
-
-    return res.json(updatedMovie)
   }
 
-  delete = async (req, res) => {
+  delete = async (req, res, next) => {
     const { id } = req.params
-    const result = await this.movieModel.delete({ id })
 
-    if (!result) {
-      return res.status(404).json({ message: "Movie not found" })
+    try {
+      const result = await this.movieModel.delete({ id })
+
+      if (!result) {
+        return res.status(404).json({
+          message: "No se encontró una pelicula con esa ID para eliminar.",
+        })
+      }
+
+      return res.json({ message: "Película eliminada." })
+    } catch (error) {
+      next(error)
     }
-
-    return res.json({ message: "Movie deleted" })
   }
 }
 

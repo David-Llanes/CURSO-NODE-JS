@@ -25,7 +25,7 @@ const movieSchema = new Schema(
   }
 )
 
-const Movie = model("Movie", movieSchema)
+export const Movie = model("Movie", movieSchema)
 
 // Connect to MongoDB
 const connectionString =
@@ -39,14 +39,6 @@ try {
 } catch (error) {
   console.error(error)
 }
-// mongoose
-//   .connect(connectionString)
-//   .then(() => {
-//     console.log(`Connected to MongoDB via ${connectionString}`)
-//   })
-//   .catch((err) => {
-//     console.log(err)
-//   })
 
 export class MovieModel {
   static getAll = async ({ genre, title }) => {
@@ -66,8 +58,10 @@ export class MovieModel {
   }
 
   static async getById({ id }) {
-    const movie = await Movie.findById(id).exec()
-    return movie
+    const idIsValid = mongoose.Types.ObjectId.isValid(id)
+    if (!idIsValid) return null
+
+    return await Movie.findById(id).exec()
   }
 
   static async create({ input }) {
@@ -75,17 +69,24 @@ export class MovieModel {
     return await newMovie.save()
   }
 
-  static async delete({ id }) {
-    const deletedMovie = await Movie.findByIdAndDelete(id).exec()
-    if (!deletedMovie) return false
-    return true
-  }
-
   static async update({ id, input }) {
+    const idIsValid = mongoose.Types.ObjectId.isValid(id)
+    if (!idIsValid) return false
+
     const modifiedMovie = await Movie.findOneAndUpdate({ _id: id }, input, {
       new: true,
     }).exec()
+
     if (!modifiedMovie) return false
     return modifiedMovie
+  }
+
+  static async delete({ id }) {
+    const idIsValid = mongoose.Types.ObjectId.isValid(id)
+    if (!idIsValid) return false
+
+    const deletedMovie = await Movie.findByIdAndDelete(id).exec()
+    if (!deletedMovie) return false
+    return true
   }
 }
