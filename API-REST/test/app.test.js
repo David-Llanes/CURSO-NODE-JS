@@ -4,7 +4,7 @@ import { Movie, MovieModel } from "../models/MongoDB/movie.js"
 import { createApp } from "../app.js"
 import request from "supertest"
 import mongoose from "mongoose"
-import { require } from "../utils/utils.js"
+
 import { validateMovie } from "../schemas/movies.js"
 const movies = require("../DBmock.json")
 

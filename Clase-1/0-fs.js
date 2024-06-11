@@ -1,4 +1,4 @@
-const fs = require('node:fs')
+const fs = require("node:fs")
 
 /* 
 Por defecto todas las operaciones de fs se hacen de manera async.
@@ -10,7 +10,7 @@ El callback se ejecutará cuando se termine el proceso.
 */
 
 /* STATS */
-const stats = fs.statSync('./file.txt')
+const stats = fs.statSync("./file.txt")
 console.log(
   stats.isFile(),
   stats.isDirectory(),
@@ -27,7 +27,7 @@ console.log(
 // })
 
 /* Leer un archivo --> fs.readFile */
-fs.readFile('./index.html', 'utf-8', (err, text) => {
+fs.readFile("./index.html", "utf-8", (err, text) => {
   if (err) {
     throw err
   }
@@ -35,19 +35,19 @@ fs.readFile('./index.html', 'utf-8', (err, text) => {
 })
 
 /* Agregar contenido al final de un archivo --> fs.appendFile */
-fs.appendFile('./index.html', '<p>Hola</p>', err => {
+fs.appendFile("./index.html", "<p>Hola</p>", (err) => {
   if (err) {
     throw err
   }
-  console.log('Archivo actualizado')
+  console.log("Archivo actualizado")
 })
 
 /* Reemplazar el contenido de un archivo --> fs.writeFile */
-fs.writeFile('./index.html', '<h1>Reemplazado</h1>', err => {
+fs.writeFile("./index.html", "<h1>Reemplazado</h1>", (err) => {
   if (err) {
     throw err
   }
-  console.log('Archivo con contenido reemplazado')
+  console.log("Archivo con contenido reemplazado")
 })
 
 /* Eliminar archivo --> fs.unlink */
