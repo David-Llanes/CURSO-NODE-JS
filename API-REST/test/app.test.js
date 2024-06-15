@@ -1,11 +1,10 @@
 import { describe, test, expect } from "@jest/globals"
-
 import { Movie, MovieModel } from "../models/MongoDB/movie.js"
 import { createApp } from "../app.js"
 import request from "supertest"
 import mongoose from "mongoose"
-
 import { validateMovie } from "../schemas/movies.js"
+import { require } from "../utils/utils.js"
 const movies = require("../DBmock.json")
 
 const { app, server } = createApp({ movieModel: MovieModel })
@@ -108,7 +107,7 @@ describe("GET /movies/:id", () => {
 })
 
 describe("POST /movies", () => {
-  test("given an object containing the new movie info, it should create a new document in the DB and send it back with 200", async () => {
+  test("given an object containing the new movie info, it should create a new document in the DB and send it back with 200 if the user is authenticated", async () => {
     const newMovie = {
       title: "Test",
       year: 2002,
@@ -124,6 +123,10 @@ describe("POST /movies", () => {
     if (result.success) {
       const response = await api
         .post("/movies")
+        .set(
+          "Authorization",
+          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiaWQiOjEsImlhdCI6MTcxODQxNDMxMn0.EuCPeXj1M57_4rB4IYW9hOMxm6-_nYHh0G3nSwPIRik"
+        )
         .send(newMovie)
         .expect(201)
         .expect("Content-Type", /json/)
@@ -133,7 +136,7 @@ describe("POST /movies", () => {
     }
   })
 
-  test("given an invalid object should return a 422 and a message", async () => {
+  test("given an invalid object should return a 422 and a message if the user is authenticated", async () => {
     const newMovie = {
       title: "Test",
       year: "2002",
@@ -156,9 +159,36 @@ describe("POST /movies", () => {
       await api
         .post("/movies")
         .send(newMovie)
+        .set(
+          "Authorization",
+          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiaWQiOjEsImlhdCI6MTcxODQxNDMxMn0.EuCPeXj1M57_4rB4IYW9hOMxm6-_nYHh0G3nSwPIRik"
+        )
         .expect(422)
         .expect("Content-Type", /json/)
         .expect({ error: formattedErrors })
+    }
+  })
+
+  test("should return 401 Unauthorized if the user is NOT authenticated", async () => {
+    const newMovie = {
+      title: "Test",
+      year: 2002,
+      director: "David Llanes",
+      duration: 98,
+      poster: "https://i.ebayimg.com/images/g/qR8AAOSwkvRZzuMD/s-l1600.jpg",
+      genre: ["Action", "Romance"],
+      rate: 6.5,
+    }
+
+    const result = validateMovie(newMovie)
+
+    if (result.success) {
+      const response = await api
+        .post("/movies")
+        .send(newMovie)
+        .expect(401)
+        .expect("Content-Type", /json/)
+        .expect({ error: "Token invalido" })
     }
   })
 })

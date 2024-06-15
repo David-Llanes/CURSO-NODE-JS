@@ -2,6 +2,7 @@ import express from "express"
 import { createMoviesRouter } from "./routes/movies.js"
 import { corsMiddleware } from "./middlewares/cors.js"
 import { notFound, serverError } from "./middlewares/errorHandlers.js"
+import loginRouter from "./routes/login.js"
 
 export const createApp = ({ movieModel }) => {
   const app = express()
@@ -13,6 +14,7 @@ export const createApp = ({ movieModel }) => {
     res.json({ message: "Movies API" })
   })
 
+  app.use("/login", loginRouter)
   app.use("/movies", createMoviesRouter({ movieModel }))
 
   /* -------------------- MANEJO DE ERRORES ---------------------- */

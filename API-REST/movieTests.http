@@ -1,5 +1,5 @@
 ### Recuperar todas las peliculas
-GET http://localhost:1234/movies
+GET http://localhost:3004/movies
 
 ### Recuperar una pelicula por ID
 GET http://localhost:1234/movies/665fd81472fa9dde4f5845d9

@@ -1,0 +1,17 @@
+### Crear una pelicula solo si el usuario esta autenticado
+POST http://localhost:1234/movies
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiaWQiOjEsImlhdCI6MTcxODQxNDMxMn0.EuCPeXj1M57_4rB4IYW9hOMxm6-_nYHh0G3nSwPIRik
+
+{
+  "title": "Autenticada 2",
+  "year": 2021,
+  "director": "David Uzumaki",
+  "duration": 123,
+  "poster": "https://i.ebayimg.com/images/g/qR8AAOSwkvRZzuMD/s-l1600.jpg",
+  "genre": ["Drama", "Romance"],
+  "rate": 9.5
+}
+
+// Debemos hacer que el controlador de peliculas verifique si el usuario esta autenticado antes de crear una pelicula.
+// Para ello, debemos modificar el controlador de peliculas y el middleware de autenticacion.

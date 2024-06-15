@@ -41,6 +41,9 @@ export class MovieController {
   create = async (req, res, next) => {
     const result = validateMovie(req.body)
 
+    // Si entra aqui es porque el middleware userExtractor se ejecuto correctamente y el usuario esta autenticado
+    const { userId } = req
+
     if (!result.success) {
       const formattedErrors = formatErrors(result.error)
 
@@ -59,7 +62,6 @@ export class MovieController {
       next(error)
     }
   }
-
   update = async (req, res, next) => {
     const { id } = req.params
     const result = validatePartialMovie(req.body)
